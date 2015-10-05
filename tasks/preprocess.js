@@ -13,10 +13,14 @@ var path = require('path');
 
 module.exports = init;
 
+var _ = require('lodash');
 var preprocess = require('preprocess');
 
+function resolve(context) {
+ return _.isFunction(context) ? context() : context;
+}
+
 function init(grunt) {
-  var _ = require('lodash');
 
   grunt.registerMultiTask('preprocess', 'Preprocess files based off environment configuration', function() {
 
@@ -32,9 +36,10 @@ function init(grunt) {
       globalOptions.srcEol = grunt.config.getRaw(this.name + '.options.srcEol');
     }
 
-    var context = _.merge({}, process.env, globalOptions.context, taskOptions.context);
-    context = _.resolve(cont
-      ext)
+    var context = _.merge({}, process.env,
+      resolve(globalOptions.context),
+      resolve(taskOptions.context)
+    );
     context.NODE_ENV = context.NODE_ENV || 'development';
 
     delete taskOptions.context;
