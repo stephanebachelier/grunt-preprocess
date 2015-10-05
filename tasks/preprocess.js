@@ -16,7 +16,7 @@ module.exports = init;
 var preprocess = require('preprocess');
 
 function init(grunt) {
-  var _ = grunt.util._;
+  var _ = require('lodash');
 
   grunt.registerMultiTask('preprocess', 'Preprocess files based off environment configuration', function() {
 
@@ -33,6 +33,8 @@ function init(grunt) {
     }
 
     var context = _.merge({}, process.env, globalOptions.context, taskOptions.context);
+    context = _.resolve(cont
+      ext)
     context.NODE_ENV = context.NODE_ENV || 'development';
 
     delete taskOptions.context;
